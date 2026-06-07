@@ -1,9 +1,154 @@
-:root {
-  --font-display:
-    Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
-    Segoe UI Symbol, Noto Color Emoji;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-  --font-rounded: 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+/* =====================================================
+   DESIGN TOKENS
+   ===================================================== */
+@theme {
+  /* Primary brand colors */
+  --color-primary: #6c4ef5;
+  --color-primary-deep: #5b3bf6;
+  --color-lingua-blue: #4d88ff;
+  --color-lingua-green: #21c16b;
+
+  /* Semantic colors */
+  --color-success: #21c16b;
+  --color-warning: #ffcb00;
+  --color-streak: #ff8a00;
+  --color-error: #ff4d4f;
+  --color-info: #4d88ff;
+
+  /* Neutrals */
+  --color-text-primary: #001328;
+  --color-text-secondary: #6b7280;
+  --color-border: #e5e7eb;
+  --color-surface: #f6f7fb;
+  --color-background: #ffffff;
+
+  /* Font families — weights as separate families (React Native pattern) */
+  --font-poppins: "Poppins-Regular";
+  --font-poppins-medium: "Poppins-Medium";
+  --font-poppins-semibold: "Poppins-SemiBold";
+  --font-poppins-bold: "Poppins-Bold";
+}
+
+/* =====================================================
+   TYPOGRAPHY
+   Usage: <Text className="h1">Title</Text>
+   ===================================================== */
+@utility h1 {
+  font-family: "Poppins-Bold";
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 38px;
+  color: #001328;
+}
+
+@utility h2 {
+  font-family: "Poppins-SemiBold";
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 31px;
+  color: #001328;
+}
+
+@utility h3 {
+  font-family: "Poppins-SemiBold";
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 26px;
+  color: #001328;
+}
+
+@utility h4 {
+  font-family: "Poppins-Medium";
+  font-size: 16px;
+  line-height: 22px;
+  color: #001328;
+}
+
+@utility body-lg {
+  font-family: "Poppins-Regular";
+  font-size: 16px;
+  line-height: 26px;
+  color: #001328;
+}
+
+@utility body-md {
+  font-family: "Poppins-Regular";
+  font-size: 14px;
+  line-height: 22px;
+  color: #001328;
+}
+
+@utility body-sm {
+  font-family: "Poppins-Regular";
+  font-size: 13px;
+  line-height: 21px;
+  color: #001328;
+}
+
+@utility caption {
+  font-family: "Poppins-Regular";
+  font-size: 11px;
+  line-height: 15px;
+  color: #6b7280;
+}
+
+/* =====================================================
+   CARD
+   Usage: <View className="card">…</View>
+   ===================================================== */
+@utility card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: #e5e7eb;
+  padding: 16px;
+}
+
+/* =====================================================
+   BUTTONS
+   Usage: <TouchableOpacity className="btn-primary">
+            <Text className="btn-text">Go</Text>
+          </TouchableOpacity>
+   ===================================================== */
+@utility btn-primary {
+  border-radius: 12px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-left: 24px;
+  padding-right: 24px;
+  align-items: center;
+  justify-content: center;
+  background-color: #6c4ef5;
+}
+
+@utility btn-secondary {
+  border-radius: 12px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-left: 24px;
+  padding-right: 24px;
+  align-items: center;
+  justify-content: center;
+  border-width: 2px;
+  border-color: #6c4ef5;
+}
+
+@utility btn-text {
+  font-family: "Poppins-SemiBold";
+  font-size: 16px;
+  line-height: 22px;
+  color: #ffffff;
+}
+
+@utility btn-text-secondary {
+  font-family: "Poppins-SemiBold";
+  font-size: 16px;
+  line-height: 22px;
+  color: #6c4ef5;
 }
