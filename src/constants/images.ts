@@ -5,6 +5,9 @@ import streakFire from "@/assets/images/streak-fire.png";
 import earth from "@/assets/images/earth.png";
 import palace from "@/assets/images/palace.png";
 import treasure from "@/assets/images/treasure.png";
+import iconGoogle from "@/assets/images/google.png";
+import iconFacebook from "@/assets/images/facebook.png";
+import iconApple from "@/assets/images/apple-logo.png";
 
 export const images = {
   mascotLogo,
@@ -14,4 +17,7 @@ export const images = {
   earth,
   palace,
   treasure,
+  iconGoogle,
+  iconFacebook,
+  iconApple,
 };
