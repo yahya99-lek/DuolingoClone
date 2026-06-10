@@ -74,7 +74,7 @@ export default function Onboarding() {
           {/* Get Started CTA */}
           <TouchableOpacity
             className="btn-primary mb-8"
-            onPress={() => router.push("/sign-in")}
+            onPress={() => router.push("/sign-up")}
             activeOpacity={0.85}
           >
             <View className="flex-row items-center gap-2">
