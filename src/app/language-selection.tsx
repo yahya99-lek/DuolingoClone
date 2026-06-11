@@ -12,17 +12,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { languages } from "@/data/languages";
 import { images } from "@/constants/images";
+import { useLanguageStore } from "@/store/languageStore";
 import type { LanguageCode } from "@/types/learning";
 
 export default function LanguageSelection() {
   const [selected, setSelected] = useState<LanguageCode>("es");
   const [search, setSearch] = useState("");
+  const { setSelectedLanguage } = useLanguageStore();
 
   const filtered = languages.filter((l) =>
     l.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleConfirm = () => {
+    setSelectedLanguage(selected);
     router.replace("/");
   };
 

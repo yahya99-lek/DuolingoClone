@@ -44,8 +44,23 @@ export default function SignIn() {
     [startSSOFlow],
   );
 
-  const clerkMsg = (err: any) =>
-    err?.longMessage ?? err?.message ?? "Something went wrong.";
+  const clerkMsg = (err: unknown) => {
+    if (err instanceof Error) {
+      return err.message || "Something went wrong.";
+    }
+
+    if (typeof err === "object" && err !== null) {
+      const maybeErr = err as { longMessage?: unknown; message?: unknown };
+      if (typeof maybeErr.longMessage === "string") {
+        return maybeErr.longMessage;
+      }
+      if (typeof maybeErr.message === "string") {
+        return maybeErr.message;
+      }
+    }
+
+    return "Something went wrong.";
+  };
 
   const handleSignIn = async () => {
     if (!email.trim()) {
@@ -57,22 +72,25 @@ export default function SignIn() {
     setLoading(true);
     setError("");
 
-    const { error: createError } = await signIn.create({ identifier: email });
-    if (createError) {
-      setError(clerkMsg(createError));
-      setLoading(false);
-      return;
-    }
+    try {
+      const { error: createError } = await signIn.create({ identifier: email });
+      if (createError) {
+        setError(clerkMsg(createError));
+        return;
+      }
 
-    const { error: sendError } = await signIn.emailCode.sendCode();
-    if (sendError) {
-      setError(clerkMsg(sendError));
-      setLoading(false);
-      return;
-    }
+      const { error: sendError } = await signIn.emailCode.sendCode();
+      if (sendError) {
+        setError(clerkMsg(sendError));
+        return;
+      }
 
-    setLoading(false);
-    setModalVisible(true);
+      setModalVisible(true);
+    } catch (error: unknown) {
+      setError(clerkMsg(error) || "Failed to send sign-in code");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleVerify = async (code: string) => {

@@ -1,15 +1,28 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth, useUser } from "@clerk/expo";
 import { router } from "expo-router";
+import { useLanguageStore } from "@/store/languageStore";
+import { languages } from "@/data/languages";
 
 export default function Home() {
   const { signOut } = useAuth();
   const { user } = useUser();
+  const { selectedLanguage, clearSelectedLanguage } = useLanguageStore();
+  const activeLang = languages.find((l) => l.code === selectedLanguage);
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      await signOut();
+    } catch (err: unknown) {
+      console.error("Sign out failed:", err instanceof Error ? err.message : String(err));
+    }
+
     router.replace("/onboarding");
+  };
+
+  const handleClearLanguage = () => {
+    clearSelectedLanguage();
   };
 
   return (
@@ -20,6 +33,15 @@ export default function Home() {
           <Text className="body-md text-text-secondary text-center">
             {user.primaryEmailAddress.emailAddress}
           </Text>
+        ) : null}
+        {activeLang ? (
+          <View className="items-center gap-2">
+            <Image
+              source={{ uri: activeLang.flag }}
+              style={{ width: 56, height: 56, borderRadius: 28 }}
+            />
+            <Text className="body-md font-semibold">{activeLang.name}</Text>
+          </View>
         ) : null}
         <TouchableOpacity
           className="btn-primary w-full"
@@ -34,6 +56,13 @@ export default function Home() {
           activeOpacity={0.85}
         >
           <Text className="btn-text-secondary">Sign Out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="w-full items-center py-3"
+          onPress={handleClearLanguage}
+          activeOpacity={0.7}
+        >
+          <Text className="caption text-red-400">Clear language (test)</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
