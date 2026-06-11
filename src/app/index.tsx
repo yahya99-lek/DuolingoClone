@@ -23,10 +23,17 @@ export default function Home() {
         ) : null}
         <TouchableOpacity
           className="btn-primary w-full"
+          onPress={() => router.push("/language-selection")}
+          activeOpacity={0.85}
+        >
+          <Text className="btn-text">Choose a Language</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="btn-secondary w-full"
           onPress={handleSignOut}
           activeOpacity={0.85}
         >
-          <Text className="btn-text">Sign Out</Text>
+          <Text className="btn-text-secondary">Sign Out</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
