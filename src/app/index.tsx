@@ -14,8 +14,8 @@ export default function Home() {
   const handleSignOut = async () => {
     try {
       await signOut();
-    } catch (err: any) {
-      console.error("Sign out failed:", err);
+    } catch (err: unknown) {
+      console.error("Sign out failed:", err instanceof Error ? err.message : String(err));
     }
 
     router.replace("/onboarding");
