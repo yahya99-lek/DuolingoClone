@@ -8,7 +8,12 @@ export default function Home() {
   const { user } = useUser();
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      await signOut();
+    } catch (err: any) {
+      console.error("Sign out failed:", err);
+    }
+
     router.replace("/onboarding");
   };
 

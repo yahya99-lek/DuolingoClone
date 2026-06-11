@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 import { languages } from "@/data/languages";
 import { images } from "@/constants/images";
@@ -22,7 +23,13 @@ export default function LanguageSelection() {
     l.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    try {
+      await SecureStore.setItemAsync("selectedLanguage", selected);
+    } catch (err: any) {
+      console.error("Failed to persist selected language:", err);
+    }
+
     router.replace("/");
   };
 

@@ -46,8 +46,26 @@ export default function SignUp() {
     [startSSOFlow],
   );
 
-  const clerkMsg = (err: any) =>
-    err?.longMessage ?? err?.message ?? "Something went wrong.";
+  const clerkMsg = (err: unknown) => {
+    if (err instanceof Error) {
+      const maybeErr = err as Error & { longMessage?: unknown };
+      return typeof maybeErr.longMessage === "string"
+        ? maybeErr.longMessage
+        : maybeErr.message || "Something went wrong.";
+    }
+
+    if (typeof err === "object" && err !== null) {
+      const maybeErr = err as { longMessage?: unknown; message?: unknown };
+      if (typeof maybeErr.longMessage === "string") {
+        return maybeErr.longMessage;
+      }
+      if (typeof maybeErr.message === "string") {
+        return maybeErr.message;
+      }
+    }
+
+    return "Something went wrong.";
+  };
 
   const handleSignUp = async () => {
     if (!email.trim()) {
@@ -63,22 +81,25 @@ export default function SignUp() {
     setLoading(true);
     setError("");
 
-    const { error: pwError } = await signUp.password({ emailAddress: email, password });
-    if (pwError) {
-      setError(clerkMsg(pwError));
-      setLoading(false);
-      return;
-    }
+    try {
+      const { error: pwError } = await signUp.password({ emailAddress: email, password });
+      if (pwError) {
+        setError(clerkMsg(pwError));
+        return;
+      }
 
-    const { error: sendError } = await signUp.verifications.sendEmailCode();
-    if (sendError) {
-      setError(clerkMsg(sendError));
-      setLoading(false);
-      return;
-    }
+      const { error: sendError } = await signUp.verifications.sendEmailCode();
+      if (sendError) {
+        setError(clerkMsg(sendError));
+        return;
+      }
 
-    setLoading(false);
-    setModalVisible(true);
+      setModalVisible(true);
+    } catch (err: unknown) {
+      setError(clerkMsg(err) || "An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleVerify = async (code: string) => {

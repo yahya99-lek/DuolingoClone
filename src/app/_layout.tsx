@@ -25,7 +25,7 @@ function AuthGate() {
     } else if (isSignedIn && (inAuthGroup || isOnboarding)) {
       router.replace("/");
     }
-  }, [isSignedIn, isLoaded, segments]);
+  }, [isSignedIn, isLoaded, segments, router]);
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }
@@ -46,11 +46,15 @@ export default function RootLayout() {
 
   if (!fontsLoaded) return null;
 
+  const clerkPublishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  if (!clerkPublishableKey) {
+    throw new Error(
+      "Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY environment variable. Please set it in your Expo environment."
+    );
+  }
+
   return (
-    <ClerkProvider
-      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
-      tokenCache={tokenCache}
-    >
+    <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
       <AuthGate />
     </ClerkProvider>
   );

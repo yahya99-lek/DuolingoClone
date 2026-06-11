@@ -29,6 +29,7 @@ export default function VerificationModal({
 }: VerificationModalProps) {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<TextInput>(null);
 
@@ -60,12 +61,18 @@ export default function VerificationModal({
   };
 
   const handleResend = async () => {
+    if (isResending) return;
+
     setCode("");
     setError("");
+    setIsResending(true);
+
     try {
       await onResend();
     } catch (err: any) {
       setError(err?.longMessage ?? err?.errors?.[0]?.longMessage ?? "Failed to resend code.");
+    } finally {
+      setIsResending(false);
     }
   };
 
