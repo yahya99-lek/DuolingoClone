@@ -6,6 +6,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { ClerkProvider, useAuth } from "@clerk/expo";
 import { tokenCache } from "@/lib/clerk";
+import { useLanguageStore } from "@/store/languageStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,19 +14,27 @@ function AuthGate() {
   const { isSignedIn, isLoaded } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const { selectedLanguage, _hasHydrated } = useLanguageStore();
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || !_hasHydrated) return;
 
     const inAuthGroup = segments[0] === "(auth)";
     const isOnboarding = segments[0] === "onboarding";
+    const isLanguageSelection = segments[0] === "language-selection";
 
     if (!isSignedIn && !inAuthGroup && !isOnboarding) {
       router.replace("/onboarding");
     } else if (isSignedIn && (inAuthGroup || isOnboarding)) {
-      router.replace("/");
+      if (selectedLanguage) {
+        router.replace("/");
+      } else {
+        router.replace("/language-selection");
+      }
+    } else if (isSignedIn && !selectedLanguage && !isLanguageSelection) {
+      router.replace("/language-selection");
     }
-  }, [isSignedIn, isLoaded, segments, router]);
+  }, [isSignedIn, isLoaded, segments, router, selectedLanguage, _hasHydrated]);
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }
