@@ -1,5 +1,6 @@
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 import { useUser } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useLanguageStore } from "@/store/languageStore";
@@ -56,6 +57,7 @@ const TODAY_PLAN = [
 // ─── Screen ──────────────────────────────────────────────────────────────────
 
 export default function HomeScreen() {
+  const router = useRouter();
   const { user } = useUser();
   const { selectedLanguage } = useLanguageStore();
 
@@ -66,6 +68,16 @@ export default function HomeScreen() {
   const firstName = user?.firstName ?? user?.username ?? "Learner";
   const greeting = selectedLanguage ? (GREETINGS[selectedLanguage] ?? "Hello") : "Hello";
   const xpPercent = Math.round((TODAY_XP / GOAL_XP) * 100);
+
+  const handleContinue = () => router.push("/(tabs)/learn");
+  const handleViewAll = () => router.push("/(tabs)/learn");
+  const handleOpenPlan = (id: string) => {
+    if (id === "ai-conv") {
+      router.push("/(tabs)/ai-teacher");
+    } else {
+      router.push("/(tabs)/learn");
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -98,9 +110,9 @@ export default function HomeScreen() {
                 {STREAK}
               </Text>
             </View>
-            <TouchableOpacity className="p-0.5">
+            <View className="p-0.5">
               <Ionicons name="notifications-outline" size={24} color="#001328" />
-            </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -144,7 +156,7 @@ export default function HomeScreen() {
               <Text className="font-poppins text-[13px] text-white/75 mb-[18px]">
                 A1 • {currentUnit ? `Unit ${currentUnit.order}` : "Unit 1"}
               </Text>
-              <TouchableOpacity className="bg-white rounded-xl py-2.5 px-6 self-start">
+              <TouchableOpacity className="bg-white rounded-xl py-2.5 px-6 self-start" onPress={handleContinue}>
                 <Text className="font-poppins-semibold text-sm text-primary">
                   Continue
                 </Text>
@@ -164,7 +176,7 @@ export default function HomeScreen() {
               <Text className="font-poppins-semibold text-lg text-text-primary">
                 Today's plan
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleViewAll}>
                 <Text className="font-poppins-semibold text-sm text-primary">
                   View all
                 </Text>
@@ -176,6 +188,7 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   key={item.id}
                   className="bg-white rounded-2xl border border-border p-[14px] flex-row items-center gap-3"
+                  onPress={() => handleOpenPlan(item.id)}
                 >
                   {/* iconBg is data-driven so backgroundColor stays inline */}
                   <View
