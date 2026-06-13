@@ -20,6 +20,7 @@ function AuthGate() {
     if (!isLoaded || !_hasHydrated) return;
 
     const inAuthGroup = segments[0] === "(auth)";
+    const inTabsGroup = segments[0] === "(tabs)";
     const isOnboarding = segments[0] === "onboarding";
     const isLanguageSelection = segments[0] === "language-selection";
 
@@ -27,12 +28,14 @@ function AuthGate() {
       router.replace("/onboarding");
     } else if (isSignedIn && (inAuthGroup || isOnboarding)) {
       if (selectedLanguage) {
-        router.replace("/");
+        router.replace("/(tabs)");
       } else {
         router.replace("/language-selection");
       }
     } else if (isSignedIn && !selectedLanguage && !isLanguageSelection) {
       router.replace("/language-selection");
+    } else if (isSignedIn && selectedLanguage && !inTabsGroup && !isLanguageSelection) {
+      router.replace("/(tabs)");
     }
   }, [isSignedIn, isLoaded, segments, router, selectedLanguage, _hasHydrated]);
 
